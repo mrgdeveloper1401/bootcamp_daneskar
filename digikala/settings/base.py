@@ -18,6 +18,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 # Application definition
+CREATEAPP = [
+    'products.apps.ProductsConfig',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    *CREATEAPP,
 ]
 
 MIDDLEWARE = [
