@@ -20,6 +20,7 @@ DEBUG = False
 # Application definition
 CREATEAPP = [
     'products.apps.ProductsConfig',
+    'image.apps.ImageConfig',
 ]
 
 INSTALLED_APPS = [
