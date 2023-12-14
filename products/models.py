@@ -6,12 +6,12 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Category(MPTTModel):
-    name = models.CharField(_("category name"), max_length=50)
+    name = models.CharField(_("category name"), max_length=50, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')    
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True, db_index=True)
     is_public = models.BooleanField(default=True)
-    description = models.TextField()
-    image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='category_images')
+    description = models.TextField(blank=True, null=True)
+    image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='category_images', blank=True, null=True)
 
     class Meta:
         verbose_name = _("Category")
@@ -27,10 +27,11 @@ class Category(MPTTModel):
 class Product(models.Model):
     fa_name = models.CharField(_("persion name"), max_length=150)
     en_name = models.CharField(_("english name"), max_length=150)
-    slug = models.SlugField(max_length=150)
-    description = models.TextField()
+    slug = models.SlugField(max_length=150, unique=True, db_index=True)
+    description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='categories')
     image = models.ForeignKey("image.Image", on_delete=models.CASCADE)
+    is_public = models.BooleanField(default=True)
     
     
     def __str__(self):
@@ -49,7 +50,8 @@ class Comment(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
     rate = models.IntegerField()
     user = models.EmailField(max_length=100)
-    
+    is_public = models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return f'comment on {self.product.en_name}'
     
@@ -79,6 +81,7 @@ class Question(models.Model):
 class Answer(models.Model):
     text = models.TextField()
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='questions')
+    is_public = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.text
@@ -116,7 +119,7 @@ class ProductPrice(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=3)
     created_at = models.DateTimeField(_("create"), auto_now_add=True)
     updated_at = models.DateTimeField(_("update"), auto_now=True)
-    
+    is_public = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("ProductPrice")
