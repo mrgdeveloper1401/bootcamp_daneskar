@@ -3,6 +3,16 @@ from .models import Category, Product, Question, Answer, Comment, ProductOption,
 from image.admin import ImageInline
 
 
+class ProductOptionInline(admin.TabularInline):
+    model = ProductOption
+    extra = 0
+
+
+class ProductPriceInline(admin.TabularInline):
+    model = ProductPrice
+    extra = 0
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -25,6 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('en_name', 'fa_name', 'category')
     list_editable = ('is_public',)
     actions = ('disable_product',)
+    inlines = (ProductOptionInline, ProductPriceInline)
 
     @admin.action(description='disable is public')
     def disable_product(modeladmin, request, queryset):

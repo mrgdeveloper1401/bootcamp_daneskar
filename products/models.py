@@ -29,8 +29,8 @@ class Product(models.Model):
     en_name = models.CharField(_("english name"), max_length=150)
     slug = models.SlugField(max_length=150, unique=True, db_index=True)
     description = models.TextField(blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='categories')
-    image = models.ForeignKey("image.Image", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='product_category')
+    image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='product_image')
     is_public = models.BooleanField(default=True)
     
     
@@ -47,7 +47,7 @@ class Product(models.Model):
 class Comment(models.Model):
     title = models.CharField(max_length=50)
     text = models.TextField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comment_product')
     rate = models.IntegerField()
     user = models.EmailField(max_length=100)
     is_public = models.BooleanField(default=False)
@@ -63,7 +63,7 @@ class Comment(models.Model):
 class Question(models.Model):
     user = models.EmailField(max_length=100)
     body = models.TextField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="question_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="question_product")
     is_public = models.BooleanField(default=False)
     
 
@@ -80,7 +80,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.TextField()
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='questions')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answer_question')
     is_public = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -98,7 +98,7 @@ class Answer(models.Model):
 
 
 class ProductOption(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_options")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_option")
     title = models.CharField(_('Attribute product'), max_length=50)
     value = models.CharField(_("value product"), max_length=50)
     is_public = models.BooleanField(default=True)
@@ -119,14 +119,14 @@ class ProductPrice(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=3)
     created_at = models.DateTimeField(_("create"), auto_now_add=True)
     updated_at = models.DateTimeField(_("update"), auto_now=True)
-    is_public = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _("ProductPrice")
         verbose_name_plural = _("ProductPrices")
 
     def __str__(self):
-        return self.name
+        return self.product.en_name
 
     def get_absolute_url(self):
         return reverse_lazy("ProductPrice_detail", kwargs={"pk": self.pk})

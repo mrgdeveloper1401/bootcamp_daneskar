@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.views import View
 from .models import Category, Product
 
@@ -33,6 +33,13 @@ class HomeView(View):
     templad_name = 'products/index.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.templad_name)
+
+
+class ProductView(View):
+    templated_name = 'products/products.html'
+    def get(self, request, *args, **kwargs):
+        all_product = get_list_or_404(Product, is_public=True)
+        return render(request, self.templated_name, {'product': all_product})
 
 
 class ProductDetailsView(View):
