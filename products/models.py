@@ -33,6 +33,9 @@ class Product(models.Model):
     image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='product_image')
     is_public = models.BooleanField(default=True)
     
+    @property
+    def default_image(self):
+        return self.image
     
     def __str__(self):
         return self.en_name
@@ -108,7 +111,7 @@ class ProductOption(models.Model):
         verbose_name_plural = _("ProductOptions")
 
     def __str__(self):
-        return f'{self.title} -> {self.value}'
+        return f'{self.attribute} -> {self.value}'
 
     def get_absolute_url(self):
         return reverse_lazy("ProductOption_detail", kwargs={"pk": self.pk})
