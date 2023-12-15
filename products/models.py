@@ -99,7 +99,7 @@ class Answer(models.Model):
 
 class ProductOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_option")
-    title = models.CharField(_('Attribute product'), max_length=50)
+    attribute = models.CharField(_('Attribute product'), max_length=50)
     value = models.CharField(_("value product"), max_length=50)
     is_public = models.BooleanField(default=True)
     

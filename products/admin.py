@@ -13,6 +13,11 @@ class ProductPriceInline(admin.TabularInline):
     extra = 0
 
 
+class AnwerInline(admin.TabularInline):
+    model = Answer
+    extra = 0
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -43,7 +48,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    pass
+    inlines =(AnwerInline,)
 
 
 @admin.register(Answer)
