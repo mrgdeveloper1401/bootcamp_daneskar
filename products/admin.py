@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Question, Answer, Comment, ProductOption, SellerProductPrice
+from .models import Category, Product, Question, Answer, Comment, ProductOption, SellerProductPrice, Brand
 from image.admin import ImageInline
 
 
@@ -30,6 +30,11 @@ class CategoryAdmin(admin.ModelAdmin):
     @admin.action(description='disable is public')
     def disable_category(modeladmin, request, queryset):
         queryset.update(is_public=False)
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Product)

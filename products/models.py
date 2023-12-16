@@ -43,7 +43,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='product_brand')
-    seller = models.ManyToManyField('seller.Seller', through='SellerProductPrice')
+    sellers = models.ManyToManyField('seller.Seller', through='SellerProductPrice')
     image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='product_image')
     is_public = models.BooleanField(default=True)
     
@@ -144,11 +144,11 @@ class SellerProductPrice(models.Model):
     is_public = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = _("ProductPrice")
-        verbose_name_plural = _("ProductPrices")
+        verbose_name = _("SellerProductPrice")
+        verbose_name_plural = _("SellerProductPrices")
 
     def __str__(self):
         return self.product.en_name
 
     def get_absolute_url(self):
-        return reverse_lazy("ProductPrice_detail", kwargs={"pk": self.pk})
+        return reverse_lazy("seller_product_price", kwargs={"pk": self.pk})
