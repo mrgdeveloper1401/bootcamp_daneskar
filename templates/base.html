@@ -22,10 +22,57 @@
     {% block title %}{% endblock title %}
 </head>
 <body>
+    {% include "components/header.html" %}
     {% block content %}{% endblock content %}
-
+    {% include "components/footer.html" %}
 
     {% comment %} link js {% endcomment %}
+    <script>
+        $(function() {
+            var Accordion = function(el, multiple) {
+                this.el = el || {};
+                this.multiple = multiple || false;
+
+                // Variables privadas
+                var links = this.el.find('.link');
+                // Evento
+                links.on('click', {
+                    el: this.el,
+                    multiple: this.multiple
+                }, this.dropdown)
+            }
+
+            Accordion.prototype.dropdown = function(e) {
+                var $el = e.data.el;
+                $this = $(this),
+                    $next = $this.next();
+
+                $next.slideToggle();
+                $this.parent().toggleClass('open');
+
+                if (!e.data.multiple) {
+                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+                };
+            }
+
+            var accordion = new Accordion($('#accordion'), false);
+        });
+    </script>
+    <script>
+        $(window).scroll(function() {
+            if ($(window).scrollTop() >= 125) {
+                $('.menu').addClass('position-fixed');
+                $('.menu-section2').addClass('d-none');
+                $('.menu-hr').addClass('d-none');
+            } else if ($(window).scrollTop() >= 67.5) {
+                $('.menu').removeClass('position-fixed');
+                $('.menu-section2').removeClass('d-none');
+                $('.menu-hr').removeClass('d-none');
+            } else {
+                $('.menu').removeClass('position-fixed');
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $("#loading ").hide();

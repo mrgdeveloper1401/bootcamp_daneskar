@@ -14,5 +14,5 @@ class ProductDetailsView(View):
     templated_name = 'products/product_details.html'
     def get(self, request, *args, **kwargs):
         product_details = get_object_or_404(Product, pk=kwargs['product_id'])
-        context = {'product_details': product_details}
+        context = {'pd': product_details}
         return render(request, self.templated_name, context)

@@ -24,19 +24,37 @@ class Category(MPTTModel):
         return reverse_lazy("Category_detail", kwargs={"pk": self.pk})
 
 
+class Brand(models.Model):
+    brand_name = models.CharField(_("brand"), max_length=50)
+    slug = models.SlugField(unique=True, allow_unicode=True)
+    
+    def __str__(self) -> str:
+        return self.brand_name
+    
+    class Meta:
+        verbose_name = _("Brand")
+        verbose_name_plural = _("Brands")
+
+
 class Product(models.Model):
     fa_name = models.CharField(_("persion name"), max_length=150)
     en_name = models.CharField(_("english name"), max_length=150)
     slug = models.SlugField(max_length=150, unique=True, db_index=True)
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='product_category')
+    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='product_brand')
+    seller = models.ManyToManyField('seller.Seller', through='SellerProductPrice')
     image = models.ForeignKey("image.Image", on_delete=models.CASCADE, related_name='product_image')
     is_public = models.BooleanField(default=True)
     
     @property
     def default_image(self):
-        return self.image
+        return self.image.image
     
+    @property
+    def category_family(self):
+        return self.category.get_family()
+
     def __str__(self):
         return self.en_name
     
@@ -117,8 +135,9 @@ class ProductOption(models.Model):
         return reverse_lazy("ProductOption_detail", kwargs={"pk": self.pk})
 
 
-class ProductPrice(models.Model):
+class SellerProductPrice(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_price')
+    seller = models.ForeignKey('seller.Seller', on_delete=models.PROTECT, related_name='seller_product_price')
     price = models.DecimalField(max_digits=12, decimal_places=3)
     created_at = models.DateTimeField(_("create"), auto_now_add=True)
     updated_at = models.DateTimeField(_("update"), auto_now=True)

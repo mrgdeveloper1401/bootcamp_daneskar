@@ -20,7 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 client_view = [
-    path('', include('products.urls', namespace='product'))
+    path('', include('products.urls', namespace='product')),
+    path('seller/', include('seller.urls', namespace='sellers')),
 ]
 
 urlpatterns = [
