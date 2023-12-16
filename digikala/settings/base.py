@@ -23,6 +23,7 @@ DEBUG = True
 CREATEAPP = [
     'products.apps.ProductsConfig',
     'image.apps.ImageConfig',
+    'seller.apps.SellerConfig',
 ]
 
 INSTALLED_APPS = [
